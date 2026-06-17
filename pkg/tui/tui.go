@@ -7,6 +7,7 @@ import (
 
 	"billshare/pkg/domain"
 	"billshare/pkg/engine"
+	"billshare/pkg/report"
 	"billshare/pkg/storage"
 
 	"github.com/charmbracelet/bubbles/textinput"
@@ -504,6 +505,15 @@ func (m model) updateViewGroup(msg tea.Msg) (model, tea.Cmd) {
 			m = m.reloadActiveGroup()
 			m.infoMsg = "Balances and simplified debts recalculated successfully!"
 			m.err = nil
+		case "p": // Export PNG Report
+			filename := fmt.Sprintf("%s_report.png", strings.ReplaceAll(strings.ToLower(m.activeGroup.Name), " ", "_"))
+			err := report.GenerateGroupReportImage(m.activeGroup, m.users, filename)
+			if err != nil {
+				m.err = fmt.Errorf("failed to save report: %w", err)
+			} else {
+				m.infoMsg = fmt.Sprintf("Report image exported successfully as %s", filename)
+				m.err = nil
+			}
 		}
 	}
 	return m, nil
@@ -1102,7 +1112,7 @@ func (m model) viewViewGroup() string {
 
 	s.WriteString(lipgloss.JoinHorizontal(lipgloss.Top, leftCol, rightCol) + "\n\n")
 
-	s.WriteString(helpStyle.Render("Commands: [e] Add Expense • [d] Delete Selected Expense • [s] Settle Up • [a] Add User • [o] Edit Who Owes • [r] Recalculate • [b/esc] Back") + "\n")
+	s.WriteString(helpStyle.Render("Commands: [e] Add Expense • [d] Delete Selected Expense • [s] Settle Up • [a] Add User • [o] Edit Who Owes • [r] Recalculate • [p] Export Image • [b/esc] Back") + "\n")
 	return s.String()
 }
 
