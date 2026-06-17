@@ -944,6 +944,8 @@ func (m model) View() string {
 		s.WriteString(m.viewAddUserToGroup())
 	case stateEditExpenseParticipants:
 		s.WriteString(m.viewEditExpenseParticipants())
+	case stateSettleUpSelectDebt:
+		s.WriteString(m.viewSettleUpSelectDebt())
 	}
 
 	return s.String()
