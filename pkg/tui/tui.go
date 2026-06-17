@@ -500,6 +500,10 @@ func (m model) updateViewGroup(msg tea.Msg) (model, tea.Cmd) {
 				m.err = nil
 				m.infoMsg = ""
 			}
+		case "r": // Recalculate
+			m = m.reloadActiveGroup()
+			m.infoMsg = "Balances and simplified debts recalculated successfully!"
+			m.err = nil
 		}
 	}
 	return m, nil
@@ -1098,7 +1102,7 @@ func (m model) viewViewGroup() string {
 
 	s.WriteString(lipgloss.JoinHorizontal(lipgloss.Top, leftCol, rightCol) + "\n\n")
 
-	s.WriteString(helpStyle.Render("Commands: [e] Add Expense • [d] Delete Selected Expense • [s] Settle Up • [a] Add User • [o] Edit Who Owes • [b/esc] Back") + "\n")
+	s.WriteString(helpStyle.Render("Commands: [e] Add Expense • [d] Delete Selected Expense • [s] Settle Up • [a] Add User • [o] Edit Who Owes • [r] Recalculate • [b/esc] Back") + "\n")
 	return s.String()
 }
 
