@@ -2,6 +2,7 @@ package tui
 
 import (
 	"fmt"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -10,6 +11,7 @@ import (
 	"billshare/pkg/report"
 	"billshare/pkg/storage"
 
+	"github.com/atotto/clipboard"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -512,6 +514,17 @@ func (m model) updateViewGroup(msg tea.Msg) (model, tea.Cmd) {
 				m.err = fmt.Errorf("failed to save report: %w", err)
 			} else {
 				m.infoMsg = fmt.Sprintf("Report image exported successfully as %s", filename)
+				m.err = nil
+			}
+		case "w": // Share to WhatsApp
+			reportText := GenerateWhatsAppText(m.activeGroup, m.users)
+			encodedText := url.QueryEscape(reportText)
+			shareURL := fmt.Sprintf("https://wa.me/?text=%s", encodedText)
+			err := clipboard.WriteAll(shareURL)
+			if err != nil {
+				m.err = fmt.Errorf("failed to copy to clipboard: %w", err)
+			} else {
+				m.infoMsg = "WhatsApp share link copied to clipboard!"
 				m.err = nil
 			}
 		}
@@ -1112,7 +1125,7 @@ func (m model) viewViewGroup() string {
 
 	s.WriteString(lipgloss.JoinHorizontal(lipgloss.Top, leftCol, rightCol) + "\n\n")
 
-	s.WriteString(helpStyle.Render("Commands: [e] Add Expense • [d] Delete Selected Expense • [s] Settle Up • [a] Add User • [o] Edit Who Owes • [r] Recalculate • [p] Export Image • [b/esc] Back") + "\n")
+	s.WriteString(helpStyle.Render("Commands: [e] Add Expense • [d] Delete Selected Expense • [s] Settle Up • [a] Add User • [o] Edit Who Owes • [r] Recalculate • [p] Export Image • [w] WhatsApp Share • [b/esc] Back") + "\n")
 	return s.String()
 }
 
@@ -1302,6 +1315,66 @@ func (m model) viewSettleUpSelectDebt() string {
 	s.WriteString("\n" + helpStyle.Render("[enter] Select • [esc] Cancel") + "\n")
 	return s.String()
 }
+
+func GenerateWhatsAppText(g domain.Group, allUsers []domain.User) string {
+	balances := engine.CalculateBalances(g.Members, g.Expenses)
+	transfers := engine.SettleDebts(balances)
+
+	userMap := make(map[string]string)
+	for _, u := range allUsers {
+		userMap[u.ID] = u.Name
+	}
+	getUserName := func(id string) string {
+		if name, ok := userMap[id]; ok {
+			return name
+		}
+		return id
+	}
+
+	formatCents := func(cents int64) string {
+		dollars := cents / 100
+		remCents := cents % 100
+		if remCents < 0 {
+			remCents = -remCents
+		}
+		sign := ""
+		if cents < 0 {
+			sign = "-"
+			if dollars < 0 {
+				dollars = -dollars
+			}
+		}
+		return fmt.Sprintf("%s$%d.%02d", sign, dollars, remCents)
+	}
+
+	var sb strings.Builder
+	sb.WriteString(fmt.Sprintf("*BILLSHARE REPORT - %s*\n\n", strings.ToUpper(g.Name)))
+
+	sb.WriteString("*Net Balances:*\n")
+	for _, mID := range g.Members {
+		bal := balances[mID]
+		name := getUserName(mID)
+		balStr := formatCents(bal)
+		if bal > 0 {
+			balStr = "+" + balStr
+		}
+		sb.WriteString(fmt.Sprintf("• %s: %s\n", name, balStr))
+	}
+
+	sb.WriteString("\n*Simplified Debts:*\n")
+	if len(transfers) == 0 {
+		sb.WriteString("All settled up! 🎉\n")
+	} else {
+		for _, tr := range transfers {
+			fromName := getUserName(tr.From)
+			toName := getUserName(tr.To)
+			sb.WriteString(fmt.Sprintf("• %s owes %s %s\n", fromName, toName, formatCents(tr.Amount)))
+		}
+	}
+
+	return sb.String()
+}
+
 
 
 
