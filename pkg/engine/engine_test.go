@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"billshare/pkg/domain"
+	"github.com/chandanpasunoori/billshare/pkg/domain"
 )
 
 func TestCalculateBalancesAndSettleDebts(t *testing.T) {

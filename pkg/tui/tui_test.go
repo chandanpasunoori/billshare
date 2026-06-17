@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"billshare/pkg/domain"
-	"billshare/pkg/storage"
+	"github.com/chandanpasunoori/billshare/pkg/domain"
+	"github.com/chandanpasunoori/billshare/pkg/storage"
 
 	tea "github.com/charmbracelet/bubbletea"
 )

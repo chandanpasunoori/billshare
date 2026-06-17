@@ -3,7 +3,7 @@ package engine
 import (
 	"sort"
 
-	"billshare/pkg/domain"
+	"github.com/chandanpasunoori/billshare/pkg/domain"
 )
 
 // UserBalance holds the net balance of a user (positive means creditor, negative means debtor).

@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"billshare/pkg/domain"
+	"github.com/chandanpasunoori/billshare/pkg/domain"
 )
 
 var (
@@ -285,5 +285,3 @@ func (s *JSONStore) UpdateExpenseSplits(groupID string, expenseID string, splits
 
 	return s.Save()
 }
-
-

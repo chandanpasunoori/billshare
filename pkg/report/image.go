@@ -9,8 +9,8 @@ import (
 	"os"
 	"time"
 
-	"billshare/pkg/domain"
-	"billshare/pkg/engine"
+	"github.com/chandanpasunoori/billshare/pkg/domain"
+	"github.com/chandanpasunoori/billshare/pkg/engine"
 
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/basicfont"
@@ -43,7 +43,7 @@ func GenerateGroupReportImage(g domain.Group, allUsers []domain.User, outputPath
 	// Base height + dynamic height
 	leftHeight := 80 + (numExpenses * 22)
 	rightHeight := 100 + (numMembers * 22) + (numTransfers * 22)
-	
+
 	maxContentHeight := leftHeight
 	if rightHeight > leftHeight {
 		maxContentHeight = rightHeight
@@ -51,17 +51,17 @@ func GenerateGroupReportImage(g domain.Group, allUsers []domain.User, outputPath
 	if maxContentHeight < 300 {
 		maxContentHeight = 300
 	}
-	
+
 	width := 850
 	height := maxContentHeight + 100
 
 	// 3. Define Color Palette (Sleek Dark Theme)
 	bgColor := color.RGBA{0x0f, 0x17, 0x2a, 0xff}      // Slate 900
-	primaryColor := color.RGBA{0x7d, 0x56, 0xf4, 0xff}   // Violet
-	textColor := color.RGBA{0xc1, 0xc6, 0xe2, 0xff}      // Pastel Gray
-	dimColor := color.RGBA{0x62, 0x68, 0x8f, 0xff}       // Muted Gray-Blue
-	greenColor := color.RGBA{0x04, 0xb5, 0x75, 0xff}     // Emerald Green
-	redColor := color.RGBA{0xff, 0x4c, 0x54, 0xff}       // Coral Red
+	primaryColor := color.RGBA{0x7d, 0x56, 0xf4, 0xff} // Violet
+	textColor := color.RGBA{0xc1, 0xc6, 0xe2, 0xff}    // Pastel Gray
+	dimColor := color.RGBA{0x62, 0x68, 0x8f, 0xff}     // Muted Gray-Blue
+	greenColor := color.RGBA{0x04, 0xb5, 0x75, 0xff}   // Emerald Green
+	redColor := color.RGBA{0xff, 0x4c, 0x54, 0xff}     // Coral Red
 	whiteColor := color.RGBA{0xff, 0xff, 0xff, 0xff}
 
 	// Create blank image
@@ -107,7 +107,7 @@ func GenerateGroupReportImage(g domain.Group, allUsers []domain.User, outputPath
 	// --- Draw Header ---
 	drawText(25, 35, "BILLSHARE REPORT", primaryColor)
 	drawText(25, 55, fmt.Sprintf("Group: %s", g.Name), whiteColor)
-	
+
 	// Draw timestamp
 	timeStr := time.Now().Format("Jan 02, 2006 15:04:05")
 	drawText(width-200, 35, fmt.Sprintf("Generated: %s", timeStr), dimColor)
@@ -140,7 +140,7 @@ func GenerateGroupReportImage(g domain.Group, allUsers []domain.User, outputPath
 	for _, mID := range g.Members {
 		bal := balances[mID]
 		name := getUserName(mID)
-		
+
 		balStr := formatCents(bal)
 		var balCol color.Color = textColor
 		if bal > 0 {

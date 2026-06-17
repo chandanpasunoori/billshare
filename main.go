@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"billshare/pkg/storage"
-	"billshare/pkg/tui"
+	"github.com/chandanpasunoori/billshare/pkg/storage"
+	"github.com/chandanpasunoori/billshare/pkg/tui"
 
 	tea "github.com/charmbracelet/bubbletea"
 )

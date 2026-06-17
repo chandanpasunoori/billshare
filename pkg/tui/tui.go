@@ -6,10 +6,10 @@ import (
 	"strconv"
 	"strings"
 
-	"billshare/pkg/domain"
-	"billshare/pkg/engine"
-	"billshare/pkg/report"
-	"billshare/pkg/storage"
+	"github.com/chandanpasunoori/billshare/pkg/domain"
+	"github.com/chandanpasunoori/billshare/pkg/engine"
+	"github.com/chandanpasunoori/billshare/pkg/report"
+	"github.com/chandanpasunoori/billshare/pkg/storage"
 
 	"github.com/atotto/clipboard"
 	"github.com/charmbracelet/bubbles/textinput"
@@ -64,12 +64,12 @@ type model struct {
 	groupMemberChecked map[string]bool // userID -> checked
 
 	// Add Expense Wizard state
-	expDesc         string
-	expAmount       int64
-	expPayerID      string
-	expPayerCursor  int
-	expPartCursor   int
-	expPartChecked  map[string]bool // userID -> checked
+	expDesc        string
+	expAmount      int64
+	expPayerID     string
+	expPayerCursor int
+	expPartCursor  int
+	expPartChecked map[string]bool // userID -> checked
 
 	// Settle Up Wizard state
 	settleDebtorID       string
@@ -927,8 +927,6 @@ func (m model) updateEditExpenseParticipants(msg tea.Msg) (model, tea.Cmd) {
 	return m, nil
 }
 
-
-
 func (m model) View() string {
 	var s strings.Builder
 
@@ -1006,7 +1004,7 @@ func (m model) viewHome() string {
 		for _, u := range m.users {
 			userNames = append(userNames, u.Name)
 		}
-		s.WriteString(normalItemStyle.Render("  " + strings.Join(userNames, ", ")) + "\n\n")
+		s.WriteString(normalItemStyle.Render("  "+strings.Join(userNames, ", ")) + "\n\n")
 	}
 
 	s.WriteString(helpStyle.Render("Commands: [u] Add User • [c] Create Group • [enter] View Group • [q] Quit") + "\n")
@@ -1374,7 +1372,3 @@ func GenerateWhatsAppText(g domain.Group, allUsers []domain.User) string {
 
 	return sb.String()
 }
-
-
-
-

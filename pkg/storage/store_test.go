@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"billshare/pkg/domain"
+	"github.com/chandanpasunoori/billshare/pkg/domain"
 )
 
 func TestJSONStore(t *testing.T) {

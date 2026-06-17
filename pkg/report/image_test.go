@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"billshare/pkg/domain"
+	"github.com/chandanpasunoori/billshare/pkg/domain"
 )
 
 func TestGenerateGroupReportImage(t *testing.T) {
@@ -19,8 +19,8 @@ func TestGenerateGroupReportImage(t *testing.T) {
 	outputPath := filepath.Join(tempDir, "report.png")
 
 	g := domain.Group{
-		ID:     "g1",
-		Name:   "Summer Trip",
+		ID:      "g1",
+		Name:    "Summer Trip",
 		Members: []string{"u1", "u2"},
 		Expenses: []domain.Expense{
 			{
