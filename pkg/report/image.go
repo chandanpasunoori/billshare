@@ -125,7 +125,7 @@ func GenerateGroupReportImage(g domain.Group, allUsers []domain.User, outputPath
 	} else {
 		for _, exp := range g.Expenses {
 			payer := getUserName(exp.PaidBy)
-			expStr := fmt.Sprintf("%-20s %9s (by %s)", truncateString(exp.Description, 20), formatCents(exp.Amount), payer)
+			expStr := fmt.Sprintf("%-30s %9s (by %s)", truncateString(exp.Description, 30), formatCents(exp.Amount), payer)
 			drawText(25, yLeft, expStr, textColor)
 			yLeft += 22
 		}
