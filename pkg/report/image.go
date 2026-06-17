@@ -181,7 +181,7 @@ func GenerateGroupReportImage(g domain.Group, allUsers []domain.User, outputPath
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	return png.Encode(f, img)
 }

@@ -45,7 +45,6 @@ type model struct {
 	groups           []domain.Group
 	users            []domain.User
 	selectedGroupIdx int
-	selectedUserIdx  int
 
 	// Active Group view state
 	activeGroup          domain.Group
@@ -1100,7 +1099,7 @@ func (m model) viewViewGroup() string {
 		} else {
 			balStr = normalItemStyle.Render(formatAmount(0))
 		}
-		rightSide.WriteString(fmt.Sprintf("  %s: %s\n", name, balStr))
+		fmt.Fprintf(&rightSide, "  %s: %s\n", name, balStr)
 	}
 	rightSide.WriteString("\n")
 
@@ -1346,7 +1345,7 @@ func GenerateWhatsAppText(g domain.Group, allUsers []domain.User) string {
 	}
 
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("*BILLSHARE REPORT - %s*\n\n", strings.ToUpper(g.Name)))
+	fmt.Fprintf(&sb, "*BILLSHARE REPORT - %s*\n\n", strings.ToUpper(g.Name))
 
 	sb.WriteString("*Net Balances:*\n")
 	for _, mID := range g.Members {
@@ -1356,7 +1355,7 @@ func GenerateWhatsAppText(g domain.Group, allUsers []domain.User) string {
 		if bal > 0 {
 			balStr = "+" + balStr
 		}
-		sb.WriteString(fmt.Sprintf("• %s: %s\n", name, balStr))
+		fmt.Fprintf(&sb, "• %s: %s\n", name, balStr)
 	}
 
 	sb.WriteString("\n*Simplified Debts:*\n")
@@ -1366,7 +1365,7 @@ func GenerateWhatsAppText(g domain.Group, allUsers []domain.User) string {
 		for _, tr := range transfers {
 			fromName := getUserName(tr.From)
 			toName := getUserName(tr.To)
-			sb.WriteString(fmt.Sprintf("• %s owes %s %s\n", fromName, toName, formatCents(tr.Amount)))
+			fmt.Fprintf(&sb, "• %s owes %s %s\n", fromName, toName, formatCents(tr.Amount))
 		}
 	}
 

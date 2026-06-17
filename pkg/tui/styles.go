@@ -33,8 +33,6 @@ var (
 			Padding(1, 2).
 			MarginBottom(1)
 
-	activeCardStyle = cardStyle.Copy().
-			BorderForeground(primaryColor)
 
 	selectedItemStyle = lipgloss.NewStyle().
 				Foreground(highlightColor).
